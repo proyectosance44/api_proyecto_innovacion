@@ -18,21 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    //Rutas a las que solo tienen acceso los admins
-    Route::middleware('')->group(function () {
-        //Usuarios
-        Route::get('/users', [UserController::class, 'index']);
-        Route::post('/users', [UserController::class, 'store']);
-        Route::get('/users/{user}', [UserController::class, 'show']);//Además los propios trabajadores pueden verse
-        Route::put('/users/{user}', [UserController::class, 'update']);//Además los propios trabajadores pueden actualizar la contraseña
-        Route::delete('/users/{user}', [UserController::class, 'destroy']);
-
-        //Modificaciones (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
-        Route::get('/modifications', [ModificationController::class, 'index']);
-        Route::get('/modifications/{modification}', [ModificationController::class, 'show']);
-        Route::delete('/modifications/{modification}', [ModificationController::class, 'destroy']);
-    });
-
     //Pacientes
     Route::get('/patients', [PatientController::class, 'index']);
     Route::post('/patients', [PatientController::class, 'store']);
@@ -43,7 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //Seguimientos (no se pueden actualizar ni crear porque se crean solos cuando un paciente se escapa)
     Route::get('/follow-ups', [FollowUpController::class, 'index']);
     Route::get('/follow-ups/{follow-up}', [FollowUpController::class, 'show']);
-    Route::middleware('')->delete('/follow-ups/{follow-up}', [FollowUpController::class, 'destroy']); //Solo los admins
 
     //Medicaciones
     Route::get('/medications', [MedicationController::class, 'index']);
@@ -66,4 +50,22 @@ Route::middleware('auth:sanctum')->group(function () {
     //Tabla pivote contact_patient
     Route::post('/contact-patient/attach', [ContactPatientController::class, 'attach']);
     Route::post('/contact-patient/detach', [ContactPatientController::class, 'detach']);
+
+    //Rutas a las que solo tienen acceso los admins
+    Route::middleware("role:admin")->group(function () {
+        //Usuarios
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::get('/users/{user}', [UserController::class, 'show']); //Asignar política de los propios trabajadores pueden verse
+        Route::put('/users/{user}', [UserController::class, 'update']); //Asignar política de los propios trabajadores pueden actualizar su contraseña
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+        //Modificaciones (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
+        Route::get('/modifications', [ModificationController::class, 'index']);
+        Route::get('/modifications/{modification}', [ModificationController::class, 'show']);
+        Route::delete('/modifications/{modification}', [ModificationController::class, 'destroy']);
+
+        //Seguimientos (solo los admins pueden eliminar)
+        Route::delete('/follow-ups/{follow-up}', [FollowUpController::class, 'destroy']);
+    });
 });
