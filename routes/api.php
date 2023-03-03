@@ -11,12 +11,13 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-//Login (la única ruta en la que no hace falta estar autenticado)
+//Login es la única ruta en la que no hace falta estar autenticado
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    //Logout
+    //Rutas auth
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);//post en vez de put porque no es una actualización completa del recurso
 
     //Pacientes
     Route::get('/patients', [PatientController::class, 'index']);
@@ -56,8 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
         //Usuarios
         Route::get('/users', [UserController::class, 'index']);
         Route::post('/users', [UserController::class, 'store']);
-        Route::get('/users/{user}', [UserController::class, 'show']); //Asignar política de los propios trabajadores pueden verse
-        Route::put('/users/{user}', [UserController::class, 'update']); //Asignar política de los propios trabajadores pueden actualizar su contraseña
+        Route::get('/users/{user}', [UserController::class, 'show']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
         //Modificaciones (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
