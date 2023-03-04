@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Modification;
+use App\Models\PatientLog;
 use Illuminate\Http\Request;
 
-class ModificationController extends Controller
+class PatientLogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class ModificationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Modification $modification)
+    public function show(PatientLog $modification)
     {
         //
     }
@@ -42,7 +42,7 @@ class ModificationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Modification $modification)
+    public function edit(PatientLog $modification)
     {
         //
     }
@@ -50,7 +50,7 @@ class ModificationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Modification $modification)
+    public function update(Request $request, PatientLog $modification)
     {
         //
     }
@@ -58,7 +58,7 @@ class ModificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Modification $modification)
+    public function destroy(PatientLog $modification)
     {
         //
     }
