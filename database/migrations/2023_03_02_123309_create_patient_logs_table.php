@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('patient_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();// Puede ser nulo por si por cualquier cosa no se puede determinar que usuario realizó la acción
             $table->string('patient_dni', 9);
             $table->timestamp('fecha')->useCurrent();
-            $table->enum('tipo', ['crear', 'modificar', 'borrar']);
+            $table->enum('accion', ['creación', 'modificación', 'borrado lógico', 'restauración', 'borrado físico']);
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade")->onUpdate("cascade");
