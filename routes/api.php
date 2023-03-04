@@ -6,8 +6,8 @@ use App\Http\Controllers\ContactPatientController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\MedicationPatientController;
-use App\Http\Controllers\ModificationController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientLogController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,10 +61,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
-        //Modificaciones (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
-        Route::get('/modifications', [ModificationController::class, 'index']);
-        Route::get('/modifications/{modification}', [ModificationController::class, 'show']);
-        Route::delete('/modifications/{modification}', [ModificationController::class, 'destroy']);
+        //Logs Pacientes (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
+        Route::get('/patient-logs', [PatientLogController::class, 'index']);
+        Route::get('/patient-logs/{patient-log}', [PatientLogController::class, 'show']);
+        Route::delete('/patient-logs/{patient-log}', [PatientLogController::class, 'destroy']);
 
         //Seguimientos (solo los admins pueden eliminar)
         Route::delete('/follow-ups/{follow-up}', [FollowUpController::class, 'destroy']);
