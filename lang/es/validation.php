@@ -185,8 +185,11 @@ return [
     */
 
     'attributes' => [
+        /*
         'name' => 'nombre',
-        'password' => 'contraseña'
+        'password' => 'contraseña',
+        'current_password' => 'contraseña actual'
+        */
     ],
 
 ];
