@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Patient;
+use App\Models\User;
 use App\Observers\PatientObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Patient::observe(PatientObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
