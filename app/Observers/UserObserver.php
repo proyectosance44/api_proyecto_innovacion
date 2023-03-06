@@ -12,4 +12,10 @@ class UserObserver
             $user->email_verified_at = null;
         }
     }
+
+    public function deleting(User $user): void
+    {
+        $user->email_verified_at = null;
+        $user->save();
+    }
 }

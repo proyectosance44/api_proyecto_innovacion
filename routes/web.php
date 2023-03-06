@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return "API";
-});
+})->name('home');
 
 Route::fallback(function () {
     return redirect('/');

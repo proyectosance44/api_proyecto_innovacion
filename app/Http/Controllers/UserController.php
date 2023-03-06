@@ -8,7 +8,6 @@ use App\Rules\NotBlank;
 use App\Rules\Telefono;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +29,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'dni' => ['required', 'string', 'size:9', new Dni()],
+        ]);
+
         // Validación
         $validatedData = $request->validate([
             'dni' => ['required', 'string', 'size:9', new Dni(), 'unique:users'],
@@ -67,7 +70,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Usuario obtenido exitosamente.',
             'user' => $user
-        ]);
+        ], 200);
     }
 
     /**
@@ -85,13 +88,13 @@ class UserController extends Controller
             'password' => ['string', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()]
         ]);
 
-        $user->dni = $validatedData['dni'];
-        $user->name = $validatedData['name'];
-        $user->apellidos = $validatedData['apellidos'];
-        $user->rol = $validatedData['rol'];
-        $user->email = $validatedData['email'];
-        $user->telefono = $validatedData['telefono'];
-        $user->password = Hash::make($validatedData['password']);
+        if (isset($validatedData['dni'])) $user->dni = $validatedData['dni'];
+        if (isset($validatedData['name'])) $user->name = $validatedData['name'];
+        if (isset($validatedData['apellidos'])) $user->apellidos = $validatedData['apellidos'];
+        if (isset($validatedData['rol'])) $user->rol = $validatedData['rol'];
+        if (isset($validatedData['email'])) $user->email = $validatedData['email'];
+        if (isset($validatedData['telefono'])) $user->telefono = $validatedData['telefono'];
+        if (isset($validatedData['password'])) $user->password = Hash::make($validatedData['password']);
         $user->save();
 
         return response()->json([
@@ -110,6 +113,6 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Usuario eliminado exitosamente',
             'client' => $user
-        ]);
+        ], 200);
     }
 }
