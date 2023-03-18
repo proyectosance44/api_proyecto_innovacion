@@ -12,7 +12,10 @@ class FollowUpController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Seguimientos de pacientes obtenidos exitosamente.',
+            'follow_ups' => FollowUp::all()
+        ], 200);
     }
 
     /**

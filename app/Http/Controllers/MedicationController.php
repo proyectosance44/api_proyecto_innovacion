@@ -12,7 +12,10 @@ class MedicationController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Medicaciones obtenidas exitosamente.',
+            'medication' => Medication::all()
+        ], 200);
     }
 
     /**

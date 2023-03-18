@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();// Puede ser nulo por si por cualquier cosa no se puede determinar que usuario realizó la acción
             $table->string('patient_dni', 9);
-            $table->timestamp('fecha')->useCurrent();
+            $table->timestamp('fecha', 6)->useCurrent(); // Se necesita precisión de microsegundos porque es posible que sino coincidan dos fechas
             $table->enum('accion', ['creación', 'modificación', 'borrado lógico', 'restauración', 'borrado físico']);
             $table->softDeletes();
 

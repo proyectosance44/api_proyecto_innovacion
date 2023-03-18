@@ -24,6 +24,6 @@ class DatabaseSeeder extends Seeder
     public static function calcularDni(int $numero): string
     {
         $letras = ['t', 'r', 'w', 'a', 'g', 'm', 'y', 'f', 'p', 'd', 'x', 'b', 'n', 'j', 'z', 's', 'q', 'v', 'h', 'l', 'c', 'k', 'e'];
-        return strval($numero) . strtoupper($letras[$numero % count($letras)]);
+        return str_pad($numero, 8, '0', STR_PAD_LEFT) . strtoupper($letras[$numero % count($letras)]);
     }
 }

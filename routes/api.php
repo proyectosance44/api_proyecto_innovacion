@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Seguimientos (no se pueden actualizar ni crear porque se crean solos cuando un paciente se escapa)
     Route::get('/follow-ups', [FollowUpController::class, 'index']);
-    Route::get('/follow-ups/{follow-up}', [FollowUpController::class, 'show']);
+    Route::get('/follow-ups/{followUp}', [FollowUpController::class, 'show']);
 
     //Medicaciones
     Route::get('/medications', [MedicationController::class, 'index']);
@@ -63,10 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         //Logs Pacientes (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
         Route::get('/patient-logs', [PatientLogController::class, 'index']);
-        Route::get('/patient-logs/{patient-log}', [PatientLogController::class, 'show']);
-        Route::delete('/patient-logs/{patient-log}', [PatientLogController::class, 'destroy']);
+        Route::get('/patient-logs/{patientLog}', [PatientLogController::class, 'show']);
+        Route::delete('/patient-logs/{patientLog}', [PatientLogController::class, 'destroy']);
 
         //Seguimientos (solo los admins pueden eliminar)
-        Route::delete('/follow-ups/{follow-up}', [FollowUpController::class, 'destroy']);
+        Route::delete('/follow-ups/{followUp}', [FollowUpController::class, 'destroy']);
     });
 });

@@ -29,23 +29,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'dni' => ['required', 'string', 'size:9', new Dni()],
-        ]);
-
         // Validación
         $validatedData = $request->validate([
-            'dni' => ['required', 'string', 'size:9', new Dni(), 'unique:users'],
+            'dni' => ['required', 'string', 'size:9', new Dni()],
             'name' => ['required', 'string', 'max:255', new NotBlank()],
             'apellidos' => ['required', 'string', 'max:255', new NotBlank()],
             'rol' => 'required|string|in:admin,trabajador',
-            'email' => 'required|string|email|max:255|unique:users',
-            'telefono' => ['required', 'string', 'size:9', new Telefono(), 'unique:users'],
+            'email' => 'required|string|email|max:255',
+            'telefono' => ['required', 'string', 'size:9', new Telefono()],
             'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()]
         ]);
 
+        // Si ha sido borrado lógicamente se restaura
+        $user = User::onlyTrashed()->where('dni', $validatedData['dni'])->first();
+        $isTrashed = false;
+        if (isset($user)) {
+            $request->validate([
+                'dni' => [Rule::unique('users')->ignore($user->id)],
+                'email' => [Rule::unique('users')->ignore($user->id)],
+                'telefono' => [Rule::unique('users')->ignore($user->id)],
+            ]);
+            $isTrashed = true;
+        } else {
+            $request->validate([
+                'dni' => 'unique:users',
+                'email' => 'unique:users',
+                'telefono' => 'unique:users',
+            ]);
+            $user = new User();
+        }
+
         // Creación
-        $user = new User();
         $user->dni = $validatedData['dni'];
         $user->name = $validatedData['name'];
         $user->apellidos = $validatedData['apellidos'];
@@ -53,7 +67,11 @@ class UserController extends Controller
         $user->email = $validatedData['email'];
         $user->telefono = $validatedData['telefono'];
         $user->password = Hash::make($validatedData['password']);
-        $user->save();
+        if ($isTrashed) {
+            $user->restore();
+        } else {
+            $user->save();
+        }
 
         // Respuesta
         return response()->json([
@@ -112,7 +130,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Usuario eliminado exitosamente',
-            'client' => $user
+            'user' => $user
         ], 200);
     }
 }

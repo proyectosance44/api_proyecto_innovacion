@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'rol' => 'trabajador', //Por defecto trabajador
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'telefono' => fake()->randomNumber(9),
+            'telefono' => strval(random_int(6, 7)) . str_pad(fake()->unique()->randomNumber(8), 8, '0', STR_PAD_LEFT),
             'password' => Hash::make("123456789Aa-"), // password
         ];
     }

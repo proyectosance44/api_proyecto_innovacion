@@ -12,7 +12,10 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Contactos obtenidos exitosamente.',
+            'contacts' => Contact::all()
+        ], 200);
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\PatientLog;
-use Illuminate\Http\Request;
 
 class PatientLogController extends Controller
 {
@@ -12,54 +11,33 @@ class PatientLogController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json([
+            'message' => 'Registros de pacientes obtenidos exitosamente.',
+            'patient_logs' => PatientLog::all()
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(PatientLog $modification)
+    public function show(PatientLog $patientLog)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PatientLog $modification)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PatientLog $modification)
-    {
-        //
+        return response()->json([
+            'message' => 'Registro de paciente obtenido exitosamente.',
+            'patient_log' => $patientLog
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PatientLog $modification)
+    public function destroy(PatientLog $patientLog)
     {
-        //
+        $patientLog->delete();
+
+        return response()->json([
+            'message' => 'Registro de paciente eliminado exitosamente',
+            'patient_log' => $patientLog
+        ], 200);
     }
 }

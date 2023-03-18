@@ -20,8 +20,8 @@ class UserSeeder extends Seeder
             'apellidos' => 'admin admin',
             'rol' => 'admin',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make("admin")
         ])->create();
+        User::factory(2, ['rol' => 'admin',])->create();
 
         //trabajadores
         User::factory(20)->create();
