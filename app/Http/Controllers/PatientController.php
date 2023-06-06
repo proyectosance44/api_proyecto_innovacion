@@ -2,64 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LogAction;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PatientRequest;
 use App\Models\Patient;
-use Illuminate\Http\Request;
+use App\Services\DataProcessingService;
+use App\Services\PatientLogService;
+use Illuminate\Support\Facades\DB;
 
+//¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡Implementar las fotos!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private DataProcessingService $dataProcessor;
+    private PatientLogService $patientLogService;
+
+    public function __construct(DataProcessingService $dataProcessor,PatientLogService $patientLogService)
+    {
+        $this->dataProcessor = $dataProcessor;
+        $this->patientLogService = $patientLogService;
+    }
+
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Pacientes obtenidos exitosamente.',
+            'patients' => Patient::with('medications', 'contacts', 'patient_logs', 'follow_ups')->get()
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(PatientRequest $request)
     {
-        //
+        DB::transaction(function () use ($request) {
+            $patient = Patient::create($this->dataProcessor->processData($request->validated()));
+            $this->patientLogService->logActionInPatient($patient, LogAction::Creation);
+        });
+        return response()->json([
+            'message' => 'Paciente creado exitosamente.'
+        ], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Patient $patient)
     {
-        //
+        return response()->json([
+            'message' => 'Paciente obtenido exitosamente.',
+            'patient' => Patient::with('medications', 'contacts', 'patient_logs', 'follow_ups')->find($patient->dni)
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Patient $patient)
+    public function update(PatientRequest $request, Patient $patient)
     {
-        //
+        DB::transaction(function () use ($patient, $request) {
+            $patient->update($this->dataProcessor->processData($request->validated()));
+            $this->patientLogService->logActionInPatient($patient, LogAction::Modification);
+        });
+        return response()->json([
+            'message' => 'Paciente actualizado exitosamente.'
+        ], 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Patient $patient)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Patient $patient)
     {
-        //
+        DB::transaction(function () use ($patient) {
+            $this->patientLogService->logActionInPatient($patient, LogAction::Deleted);
+            $patient->delete();
+        });
+        return response()->json([
+            'message' => 'Paciente eliminado exitosamente.'
+        ], 200);
     }
 }

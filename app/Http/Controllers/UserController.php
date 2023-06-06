@@ -1,115 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
-use App\Rules\Dni;
-use App\Rules\NotBlank;
-use App\Rules\Telefono;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\Rule;
+use App\Services\DataProcessingService;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private DataProcessingService $dataProcessor;
+
+    public function __construct(DataProcessingService $dataProcessor)
+    {
+        $this->dataProcessor = $dataProcessor;
+    }
+
     public function index()
     {
         return response()->json([
             'message' => 'Usuarios obtenidos exitosamente.',
-            'users' => User::all()
+            'users' => User::with('patient_logs')->get()
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        // Validación
-        $validatedData = $request->validate([
-            'dni' => ['required', 'string', 'size:9', new Dni(), 'unique:users'],
-            'name' => ['required', 'string', 'max:255', new NotBlank()],
-            'apellidos' => ['required', 'string', 'max:255', new NotBlank()],
-            'rol' => 'required|string|in:admin,trabajador',
-            'email' => 'required|string|email|max:255|unique:users',
-            'telefono' => ['required', 'string', 'size:9', new Telefono(), 'unique:users'],
-            'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()]
-        ]);
-
-        // Creación
-        $user = new User();
-        $user->dni = $validatedData['dni'];
-        $user->name = $validatedData['name'];
-        $user->apellidos = $validatedData['apellidos'];
-        $user->rol = $validatedData['rol'];
-        $user->email = $validatedData['email'];
-        $user->telefono = $validatedData['telefono'];
-        $user->password = Hash::make($validatedData['password']);
-        $user->save();
-
-        // Respuesta
+        User::create($this->dataProcessor->processData($request->validated()));
         return response()->json([
-            'message' => 'Usuario creado exitosamente.',
-            'user' => $user
+            'message' => 'Usuario creado exitosamente.'
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(User $user)
     {
         return response()->json([
             'message' => 'Usuario obtenido exitosamente.',
-            'user' => $user
-        ]);
+            'user' => User::with('patient_logs')->find($user->id)
+        ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        $validatedData = $request->validate([
-            'dni' => ['string', 'size:9', new Dni(), Rule::unique('users')->ignore($user->id)],
-            'name' => ['string', 'max:255', new NotBlank()],
-            'apellidos' => ['string', 'max:255', new NotBlank()],
-            'rol' => 'string|in:admin,trabajador',
-            'email' => ['string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'telefono' => ['string', 'size:9', new Telefono(), Rule::unique('users')->ignore($user->id)],
-            'password' => ['string', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()]
-        ]);
-
-        $user->dni = $validatedData['dni'];
-        $user->name = $validatedData['name'];
-        $user->apellidos = $validatedData['apellidos'];
-        $user->rol = $validatedData['rol'];
-        $user->email = $validatedData['email'];
-        $user->telefono = $validatedData['telefono'];
-        $user->password = Hash::make($validatedData['password']);
-        $user->save();
-
+        $user->update($this->dataProcessor->processData($request->validated()));
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
         return response()->json([
-            'message' => 'Usuario actualizado exitosamente.',
-            'user' => $user
+            'message' => 'Usuario actualizado exitosamente.'
         ], 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         $user->delete();
-
         return response()->json([
-            'message' => 'Usuario eliminado exitosamente',
-            'client' => $user
-        ]);
+            'message' => 'Usuario eliminado exitosamente.'
+        ], 200);
     }
 }

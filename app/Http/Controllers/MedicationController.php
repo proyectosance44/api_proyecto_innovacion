@@ -2,64 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MedicationRequest;
 use App\Models\Medication;
-use Illuminate\Http\Request;
+use App\Services\DataProcessingService;
 
 class MedicationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private DataProcessingService $dataProcessor;
+
+    public function __construct(DataProcessingService $dataProcessor)
+    {
+        $this->dataProcessor = $dataProcessor;
+    }
+
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Medicaciones obtenidas exitosamente.',
+            'medications' => Medication::with('patients')->get()
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(MedicationRequest $request)
     {
-        //
+        Medication::create($this->dataProcessor->processData($request->validated()));
+        return response()->json([
+            'message' => 'Medicación creada exitosamente.',
+        ], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Medication $medication)
     {
-        //
+        return response()->json([
+            'message' => 'Medicación obtenida exitosamente.',
+            'medication' => Medication::with('patients')->find($medication->num_registro)
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Medication $medication)
+    public function update(MedicationRequest $request, Medication $medication)
     {
-        //
+        $medication->update($this->dataProcessor->processData($request->validated()));
+        return response()->json([
+            'message' => 'Medicación actualizada exitosamente.',
+        ], 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Medication $medication)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Medication $medication)
     {
-        //
+        $medication->delete();
+        return response()->json([
+            'message' => 'Medicación eliminada exitosamente'
+        ], 200);
     }
 }

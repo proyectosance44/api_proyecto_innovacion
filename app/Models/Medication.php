@@ -1,39 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Medication extends Model
 {
-    use HasFactory;
+    use HasFactory/*, SoftDeletes*/;
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'codigo';
+    protected $fillable = [
+        'num_registro',
+        'nombre',
+    ];
 
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
+    protected $hidden = [
+        //'deleted_at'
+    ];
+
+    protected $casts = [
+        //'deleted_at' => 'datetime',
+    ];
+
+    protected $primaryKey = 'num_registro';
+
     protected $keyType = 'string';
 
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
+
+    public function patients(): BelongsToMany
+    {
+        return $this->belongsToMany(Patient::class)->withPivot('urgente');
+    }
 }

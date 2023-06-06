@@ -1,65 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\PatientLog;
-use Illuminate\Http\Request;
 
 class PatientLogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json([
+            'message' => 'Registros de pacientes obtenidos exitosamente.',
+            'patient_logs' => PatientLog::with('patient', 'user')->get()
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(PatientLog $patientLog)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(PatientLog $modification)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PatientLog $modification)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PatientLog $modification)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PatientLog $modification)
-    {
-        //
+        return response()->json([
+            'message' => 'Registro de paciente obtenido exitosamente.',
+            'patient_log' => PatientLog::with('patient', 'user')->find($patientLog->id)
+        ], 200);
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use Database\Seeders\DatabaseSeeder;
+use App\Rules\Dni;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -20,14 +21,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'dni' => DatabaseSeeder::calcularDni(fake()->unique()->randomNumber(8, false)),
-            'name' => fake()->name(),
-            'apellidos' => fake()->lastName() . " " . fake()->lastName(),
+            'dni' => Dni::calculateDni($this->faker->unique()->randomNumber(8, false)),
+            'name' => $this->faker->name(),
+            'apellidos' => $this->faker->lastName() . " " . $this->faker->lastName(),
             'rol' => 'trabajador', //Por defecto trabajador
-            'email' => fake()->unique()->safeEmail(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'telefono' => fake()->randomNumber(9),
-            'password' => Hash::make("123456789"), // password
+            'telefono' => strval(rand(6, 7)) . str_pad(strval($this->faker->unique()->randomNumber(8)), 8, '0', STR_PAD_LEFT),
+            'password' => Hash::make("123456789Aa-"),
         ];
     }
 

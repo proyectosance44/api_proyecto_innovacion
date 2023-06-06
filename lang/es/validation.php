@@ -154,7 +154,7 @@ return [
     'password.letters' => 'El :attribute debe contener al menos una letra.',
     'password.symbols' => 'El :attribute debe contener al menos un símbolo.',
     'password.numbers' => 'El :attribute debe contener al menos un número.',
-    'password.uncompromised' => 'El atributo :attribute  ha aparecido en una fuga de datos. Elija un :attribute diferente.',
+    'password.uncompromised' => 'El atributo :attribute ha aparecido en una fuga de datos. Elija un :attribute diferente.',
 
     /*
     |--------------------------------------------------------------------------

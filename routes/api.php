@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactPatientController;
@@ -16,8 +18,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //Rutas auth
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/change-password', [AuthController::class, 'changePassword']);//post en vez de put porque no es una actualización completa del recurso
+    Route::put('/change-password', [AuthController::class, 'changePassword']);
+    Route::delete('/logout', [AuthController::class, 'logout']);
 
     //Pacientes
     Route::get('/patients', [PatientController::class, 'index']);
@@ -26,9 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/patients/{patient}', [PatientController::class, 'update']);
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
 
-    //Seguimientos (no se pueden actualizar ni crear porque se crean solos cuando un paciente se escapa)
+    //Seguimientos (solo se pueden consultar porque se crean solos cuando un paciente se escapa)
     Route::get('/follow-ups', [FollowUpController::class, 'index']);
-    Route::get('/follow-ups/{follow-up}', [FollowUpController::class, 'show']);
+    Route::get('/follow-ups/{followUp}', [FollowUpController::class, 'show']);
 
     //Medicaciones
     Route::get('/medications', [MedicationController::class, 'index']);
@@ -45,12 +47,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/contacts/{contact}', [ContactController::class, 'destroy']);
 
     //Tabla pivote medication_patient
-    Route::post('/medication-patient/attach', [MedicationPatientController::class, 'attach']);
-    Route::post('/medication-patient/detach', [MedicationPatientController::class, 'detach']);
+    Route::post('/medication-patient', [MedicationPatientController::class, 'attach']);
+    Route::put('/medication-patient/{medication}/{patient}', [MedicationPatientController::class, 'update']);
+    Route::delete('/medication-patient/{medication}/{patient}', [MedicationPatientController::class, 'detach']);
 
     //Tabla pivote contact_patient
-    Route::post('/contact-patient/attach', [ContactPatientController::class, 'attach']);
-    Route::post('/contact-patient/detach', [ContactPatientController::class, 'detach']);
+    Route::post('/contact-patient', [ContactPatientController::class, 'attach']);
+    Route::put('/contact-patient/{contact}/{patient}', [ContactPatientController::class, 'update']);
+    Route::delete('/contact-patient/{contact}/{patient}', [ContactPatientController::class, 'detach']);
 
     //Rutas a las que solo tienen acceso los admins
     Route::middleware("role:admin")->group(function () {
@@ -61,12 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
-        //Logs Pacientes (no se pueden actualizar ni crear porque se crean solas al modificar un paciente)
+        //Logs Pacientes (solo se pueden consultar porque se crean solos al modificar un paciente)
         Route::get('/patient-logs', [PatientLogController::class, 'index']);
-        Route::get('/patient-logs/{patient-log}', [PatientLogController::class, 'show']);
-        Route::delete('/patient-logs/{patient-log}', [PatientLogController::class, 'destroy']);
-
-        //Seguimientos (solo los admins pueden eliminar)
-        Route::delete('/follow-ups/{follow-up}', [FollowUpController::class, 'destroy']);
+        Route::get('/patient-logs/{patientLog}', [PatientLogController::class, 'show']);
     });
 });
