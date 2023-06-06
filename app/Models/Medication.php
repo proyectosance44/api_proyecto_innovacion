@@ -1,58 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Medication extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory/*, SoftDeletes*/;
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    protected $fillable = [
+        'num_registro',
+        'nombre',
+    ];
+
     protected $hidden = [
-        'deleted_at'
+        //'deleted_at'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'deleted_at' => 'datetime',
+        //'deleted_at' => 'datetime',
     ];
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'codigo';
+    protected $primaryKey = 'num_registro';
 
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
     protected $keyType = 'string';
 
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
+
+    public function patients(): BelongsToMany
+    {
+        return $this->belongsToMany(Patient::class)->withPivot('urgente');
+    }
 }

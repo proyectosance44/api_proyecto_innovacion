@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Models\Patient;
-use App\Models\User;
-use App\Observers\PatientObserver;
-use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,8 +26,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Patient::observe(PatientObserver::class);
-        User::observe(UserObserver::class);
     }
 
     /**

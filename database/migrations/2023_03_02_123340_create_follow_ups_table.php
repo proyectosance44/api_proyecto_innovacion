@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('patient_dni', 9);
             $table->timestamp('fecha')->useCurrent();
-            $table->unsignedBigInteger('num_salida');
+            $table->unsignedSmallInteger('num_incidencia');
             $table->double('lat');
             $table->double('lng');
 
-            $table->foreign('patient_dni')->references('dni')->on('patients')->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign('patient_dni')->references('dni')->on('patients')
+                ->onDelete("cascade")->onUpdate("cascade");
+
             $table->unique(['patient_dni', 'fecha']);
         });
     }

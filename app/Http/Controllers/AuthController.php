@@ -1,25 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AuthRequest;
+use App\Services\DataProcessingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
+    private DataProcessingService $dataProcessor;
 
-    public function login(Request $request)
+    public function __construct(DataProcessingService $dataProcessor)
     {
-        // Validación
+        $this->dataProcessor = $dataProcessor;
+    }
+
+    public function login(AuthRequest $request)
+    {
         if (!Auth::attempt($request->only(['dni', 'password']))) {
-            return response()->json(['message' => 'Invalid credentials.'], 401);
+            return response()->json([
+                'message' => 'Credenciales no válidas.'
+            ], 401);
         }
 
-        // Respuesta
         return response()->json([
-            'message' => 'Logged in successfully.',
+            'message' => 'Inicio de sesión exitoso.',
             'access_token' => auth()->user()->createToken('auth_token')->plainTextToken,
             'token_type' => 'Bearer'
         ], 201);
@@ -27,28 +36,18 @@ class AuthController extends Controller
 
     public function logout()
     {
-        //Cuando ya este más desarrollado el FrontEnd eliminar solo el token que corresponda a ese navegador
+        //Actualmente al cerrar sesión se cierra sesión de todos los dispositivos porque se borran todos los tokens.
         auth()->user()->tokens()->delete();
-
-        return response()->json(['message' => 'Logged out successfully.'], 200);
+        return response()->json([
+            'message' => 'Cierre de sesión exitoso.'
+        ], 200);
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(AuthRequest $request)
     {
-        $validatedData = $request->validate([
-            'current_password' => 'required|string',
-            'password' => ['required', 'string', 'confirmed', 'different:current_password', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
-        ]);
-
-        $user = auth()->user();
-
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
-            return response()->json(['message' => 'Current password is incorrect.'], 401);
-        }
-
-        $user->password = Hash::make($validatedData['password']);
-        $user->save();
-
-        return response()->json(['message' => 'Password changed successfully.'], 200);
+        auth()->user()->update($this->dataProcessor->processData(['password' => $request->validated()['password']]));
+        return response()->json([
+            'message' => 'Contraseña modificada exitosamente.'
+        ], 200);
     }
 }

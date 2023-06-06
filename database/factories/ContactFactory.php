@@ -6,12 +6,11 @@ namespace Database\Factories;
 
 use App\Rules\Dni;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Patient>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Contact>
  */
-class PatientFactory extends Factory
+class ContactFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -22,11 +21,9 @@ class PatientFactory extends Factory
     {
         return [
             'dni' => Dni::calculateDni($this->faker->unique()->randomNumber(8, false)),
-            'id_lora' => bin2hex(Str::random(8) . strval($this->faker->unique()->randomNumber())),
-            'id_rfid' => bin2hex(Str::random(8) . strval($this->faker->unique()->randomNumber())),
             'nombre' => $this->faker->name(),
             'apellidos' => $this->faker->lastName() . " " . $this->faker->lastName(),
-            'ruta_foto' => null,
+            'telefono' => strval(rand(6, 7)) . str_pad(strval($this->faker->unique()->randomNumber(8)), 8, '0', STR_PAD_LEFT)
         ];
     }
 }

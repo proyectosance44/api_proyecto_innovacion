@@ -1,58 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory/*, SoftDeletes*/;
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    protected $fillable = [
+        'dni',
+        'id_lora',
+        'id_rfid',
+        'nombre',
+        'apellidos',
+    ];
+
     protected $hidden = [
-        'deleted_at'
+        //'deleted_at'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'deleted_at' => 'datetime',
+        //'deleted_at' => 'datetime',
     ];
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'dni';
 
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
     protected $keyType = 'string';
 
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
+
+    public function medications(): BelongsToMany
+    {
+        return $this->belongsToMany(Medication::class)->withPivot('urgente');
+    }
+
+    public function contacts(): BelongsToMany
+    {
+        return $this->belongsToMany(Contact::class)->withPivot('orden_pref');
+    }
+
+    public function patient_logs(): HasMany
+    {
+        return $this->hasMany(PatientLog::class);
+    }
+
+    public function follow_ups(): HasMany
+    {
+        return $this->hasMany(FollowUp::class);
+    }
 }

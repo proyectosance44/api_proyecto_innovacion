@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Closure;
@@ -14,16 +16,21 @@ class Dni implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!self::isValid($value)) $fail('El campo :attribute no es un dni válido.');
+        if (!self::isValid(strval($value)))
+            $fail('El campo :attribute no es un dni válido.');
     }
 
-    private static function isValid(mixed $dni)
+    public static function isValid(string $dni): bool
     {
-        $letras = ['t', 'r', 'w', 'a', 'g', 'm', 'y', 'f', 'p', 'd', 'x', 'b', 'n', 'j', 'z', 's', 'q', 'v', 'h', 'l', 'c', 'k', 'e'];
-        $strDni = strval($dni);
+        if (preg_match("/^([0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE])$/i", $dni) !== 1)
+            return false;
+        return self::calculateDni(intval(substr($dni, 0, strlen($dni) - 1))) === strtoupper($dni);
+    }
 
-        if (!preg_match("/^([0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE])$/i", $strDni, $matches)) return false;
-
-        return $letras[intval($matches[0]) % count($letras)] === strtolower(substr($strDni, -1));
+    public static function calculateDni(int $number): string
+    {
+        assert($number >= 0 && $number <= 99999999);
+        $letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+        return str_pad(strval($number), 8, '0', STR_PAD_LEFT) . $letters[$number % strlen($letters)];
     }
 }
