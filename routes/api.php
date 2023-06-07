@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactPatientController;
-use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\IncidenceController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\MedicationPatientController;
 use App\Http\Controllers\PatientController;
@@ -29,8 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
 
     //Seguimientos (solo se pueden consultar porque se crean solos cuando un paciente se escapa)
-    Route::get('/follow-ups', [FollowUpController::class, 'index']);
-    Route::get('/follow-ups/{followUp}', [FollowUpController::class, 'show']);
+    Route::get('/incidences', [IncidenceController::class, 'index']);
+    Route::get('/incidences/{incidence}', [IncidenceController::class, 'show']);
 
     //Medicaciones
     Route::get('/medications', [MedicationController::class, 'index']);

@@ -26,7 +26,7 @@ class PatientController extends Controller
     {
         return response()->json([
             'message' => 'Pacientes obtenidos exitosamente.',
-            'patients' => Patient::with('medications', 'contacts', 'patient_logs', 'follow_ups')->get()
+            'patients' => Patient::with('medications', 'contacts', 'patient_logs', 'incidences')->get()
         ], 200);
     }
 
@@ -45,7 +45,7 @@ class PatientController extends Controller
     {
         return response()->json([
             'message' => 'Paciente obtenido exitosamente.',
-            'patient' => Patient::with('medications', 'contacts', 'patient_logs', 'follow_ups')->find($patient->dni)
+            'patient' => Patient::with('medications', 'contacts', 'patient_logs', 'incidences')->find($patient->dni)
         ], 200);
     }
 

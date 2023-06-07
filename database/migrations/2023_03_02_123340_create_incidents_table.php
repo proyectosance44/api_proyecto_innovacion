@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('follow_ups', function (Blueprint $table) {
+        Schema::create('incidences', function (Blueprint $table) {
             $table->id();
             $table->string('patient_dni', 9);
             $table->timestamp('fecha')->useCurrent();
-            $table->unsignedSmallInteger('num_incidencia');
-            $table->double('lat');
-            $table->double('lng');
+            $table->unsignedMediumInteger('duracion')->nullable();// puede ser null si la incidencia esta en curso
+            $table->json('recorrido_paciente');
 
             $table->foreign('patient_dni')->references('dni')->on('patients')
                 ->onDelete("cascade")->onUpdate("cascade");
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('follow_ups');
+        Schema::dropIfExists('incidences');
     }
 };

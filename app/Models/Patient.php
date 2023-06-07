@@ -53,8 +53,8 @@ class Patient extends Model
         return $this->hasMany(PatientLog::class);
     }
 
-    public function follow_ups(): HasMany
+    public function incidences(): HasMany
     {
-        return $this->hasMany(FollowUp::class);
+        return $this->hasMany(Incidence::class);
     }
 }

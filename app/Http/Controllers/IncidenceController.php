@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\FollowUp;
+use App\Models\Incidence;
 
-class FollowUpController extends Controller
+class IncidenceController extends Controller
 {
     public function index()
     {
         return response()->json([
             'message' => 'Seguimientos de pacientes obtenidos exitosamente.',
-            'follow_ups' => FollowUp::with('patient')->get()
+            'incidences' => Incidence::with('patient')->get()
         ], 200);
     }
 
-    public function show(FollowUp $followUp)
+    public function show(Incidence $incidence)
     {
         return response()->json([
             'message' => 'Seguimiento de paciente obtenido exitosamente.',
-            'follow_up' => FollowUp::with('patient')->find($followUp->id)
+            'incidences' => Incidence::with('patient')->find($incidence->id)
         ], 200);
     }
 }

@@ -9,17 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FollowUp extends Model
+class Incidence extends Model
 {
     use HasFactory/*, SoftDeletes*/;
 
     protected $hidden = [
+        'patient_dni'
         //'deleted_at'
     ];
 
     protected $casts = [
-        'lat' => 'float',
-        'lng' => 'float',
+        'recorrido_paciente' => 'array'
         //'deleted_at' => 'datetime',
     ];
 

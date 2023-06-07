@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    
+
     public function run(): void
     {
         // Administradores
@@ -76,6 +76,6 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-        // Seguimientos
+        // Incidencias
     }
 }
