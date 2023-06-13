@@ -6,10 +6,12 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Enums\LogAction;
 use App\Models\Contact;
 use App\Models\Medication;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\PatientLogService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -38,6 +40,7 @@ class DatabaseSeeder extends Seeder
         $pacientes->each(function ($paciente) {
             Medication::factory(rand(0, 3))->create()->each(function ($medicacion) use ($paciente) {
                 $medicacion->patients()->attach($paciente, ['urgente' => rand(0, 1)]);
+                (new PatientLogService())->logActionInPatientMedication($paciente, LogAction::Assignment, $medicacion);
             });
         });
 
@@ -47,7 +50,9 @@ class DatabaseSeeder extends Seeder
             $indiceComienzo = rand(0, $totalPacientes - 1);
             $fin = rand(2, 3);
             for ($i = 0; $i < $fin; $i++) {
-                $pacientes[$indiceComienzo + $fin - 1 <= $totalPacientes - 1 ? $indiceComienzo + $i : $i]->medications()->attach($medicacion, ['urgente' => rand(0, 1)]);
+                $paciente = $pacientes[$indiceComienzo + $fin - 1 <= $totalPacientes - 1 ? $indiceComienzo + $i : $i];
+                $paciente->medications()->attach($medicacion, ['urgente' => rand(0, 1)]);
+                (new PatientLogService())->logActionInPatientMedication($paciente, LogAction::Assignment, $medicacion);
             }
         });
 
@@ -62,6 +67,7 @@ class DatabaseSeeder extends Seeder
         $pacientesConContactos->each(function ($paciente) {
             Contact::factory(rand(0, 4))->create()->each(function ($contacto, $key) use ($paciente) {
                 $contacto->patients()->attach($paciente, ['orden_pref' => $key + 1]);
+                (new PatientLogService())->logActionInPatientContact($paciente, LogAction::Assignment, $contacto);
             });
         });
 
@@ -73,6 +79,7 @@ class DatabaseSeeder extends Seeder
             for ($i = 0; $i < $fin; $i++) {
                 $pacienteComparteContacto = $pacientesConContactos[$indiceComienzo + $fin - 1 <= $totalPacientesConContactos - 1 ? $indiceComienzo + $i : $i];
                 $pacienteComparteContacto->contacts()->attach($contacto, ['orden_pref' => DB::table('contact_patient')->where('patient_dni', $pacienteComparteContacto->dni)->count() + 1]);
+                (new PatientLogService())->logActionInPatientContact($pacienteComparteContacto, LogAction::Assignment, $contacto);
             }
         });
 

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\LogAction;
+use App\Models\Patient;
 use App\Rules\Dni;
+use App\Services\PatientLogService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -28,5 +31,12 @@ class PatientFactory extends Factory
             'apellidos' => $this->faker->lastName() . " " . $this->faker->lastName(),
             'ruta_foto' => null,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Patient $patient) {
+            (new PatientLogService)->logActionInPatient($patient, LogAction::Creation);
+        });
     }
 }

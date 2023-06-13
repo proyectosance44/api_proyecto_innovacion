@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserProfileRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Services\DataProcessingService;
@@ -50,6 +51,26 @@ class UserController extends Controller
         }
         return response()->json([
             'message' => 'Usuario actualizado exitosamente.'
+        ], 201);
+    }
+
+    public function updateProfile(UserProfileRequest $request)
+    {
+        $user = User::findOrFail(auth()->id());
+        $validatedData = $this->dataProcessor->processData($request->validated());
+        $dataToUpdate = [];
+
+        if (isset($validatedData['telefono']))
+            $dataToUpdate['telefono'] =  $validatedData['telefono'];
+        if (isset($validatedData['email']))
+            $dataToUpdate['email'] =  $validatedData['email'];
+        $user->update($dataToUpdate);
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        return response()->json([
+            'message' => 'Perfil de usuario actualizado exitosamente.'
         ], 201);
     }
 
