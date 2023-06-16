@@ -19,7 +19,9 @@ class Incidence extends Model
     ];
 
     protected $casts = [
-        'recorrido_paciente' => 'array'
+        'recorrido_paciente' => 'array',
+        'fecha_inicio' => 'datetime',
+        'fecha_fin' => 'datetime',
         //'deleted_at' => 'datetime',
     ];
 

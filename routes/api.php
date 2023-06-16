@@ -28,8 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/patients/{patient}', [PatientController::class, 'update']);
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
 
-    //Seguimientos (solo se pueden consultar porque se crean solos cuando un paciente se escapa)
+    //Incidencias (solo se pueden consultar porque se crean cuando un paciente se escapa)
     Route::get('/incidences', [IncidenceController::class, 'index']);
+    Route::get('/incidences/in_progress', [IncidenceController::class, 'inProgress']);
     Route::get('/incidences/{incidence}', [IncidenceController::class, 'show']);
 
     //Medicaciones

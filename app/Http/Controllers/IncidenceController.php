@@ -10,15 +10,23 @@ class IncidenceController extends Controller
     public function index()
     {
         return response()->json([
-            'message' => 'Seguimientos de pacientes obtenidos exitosamente.',
+            'message' => 'Incidencias obtenidas exitosamente.',
             'incidences' => Incidence::with('patient')->get()
+        ], 200);
+    }
+
+    public function inProgress()
+    {
+        return response()->json([
+            'message' => 'Incidencias en curso obtenidas exitosamente.',
+            'incidences' => Incidence::with('patient')->whereNull('fecha_fin')->get()
         ], 200);
     }
 
     public function show(Incidence $incidence)
     {
         return response()->json([
-            'message' => 'Seguimiento de paciente obtenido exitosamente.',
+            'message' => 'Incidencia obtenida exitosamente.',
             'incidences' => Incidence::with('patient')->find($incidence->id)
         ], 200);
     }

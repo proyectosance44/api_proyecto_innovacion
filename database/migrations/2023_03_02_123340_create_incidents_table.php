@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('incidences', function (Blueprint $table) {
             $table->id();
             $table->string('patient_dni', 9);
-            $table->timestamp('fecha')->useCurrent();
-            $table->unsignedMediumInteger('duracion')->nullable();// puede ser null si la incidencia esta en curso
+            $table->timestamp('fecha_inicio')->useCurrent();
+            $table->timestamp('fecha_fin')->nullable();// puede ser null si la incidencia esta en curso
             $table->json('recorrido_paciente');
 
             $table->foreign('patient_dni')->references('dni')->on('patients')
                 ->onDelete("cascade")->onUpdate("cascade");
 
-            $table->unique(['patient_dni', 'fecha']);
+            $table->unique(['patient_dni', 'fecha_inicio']);
         });
     }
 
