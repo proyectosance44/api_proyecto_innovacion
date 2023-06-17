@@ -23,7 +23,7 @@ class MedicationFactory extends Factory
         $medicamento = Http::get('https://cima.aemps.es/cima/rest/medicamentos?pagesize=1&pagina=' . strval($this->faker->unique()->numberBetween(1, 24100)))['resultados'][0];
 
         // En el caso de que la API no funcione
-        //$medicamento = json_decode(Storage::get('medications.json'), true)['resultados'][$this->faker->unique()->numberBetween(1, 1000)];
+        //$medicamento = json_decode(Storage::get('populateDatabase/medications.json'), true)['resultados'][$this->faker->unique()->numberBetween(1, 1000)];
 
         return [
             'num_registro' => $medicamento['nregistro'],
