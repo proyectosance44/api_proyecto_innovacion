@@ -22,7 +22,6 @@ class Incidence extends Model
         'recorrido_paciente' => 'array',
         'fecha_inicio' => 'datetime',
         'fecha_fin' => 'datetime',
-        
         //'deleted_at' => 'datetime',
     ];
 
