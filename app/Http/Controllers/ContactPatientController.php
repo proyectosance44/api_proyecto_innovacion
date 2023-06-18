@@ -8,10 +8,8 @@ use App\Http\Requests\ContactPatientRequest;
 use App\Models\Contact;
 use App\Models\Patient;
 use App\Services\PatientLogService;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+
 
 class ContactPatientController extends Controller
 {

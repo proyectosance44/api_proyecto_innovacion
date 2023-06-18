@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactPatientController;
 use App\Http\Controllers\IncidenceController;
+use App\Http\Controllers\IoTDataInputController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\MedicationPatientController;
 use App\Http\Controllers\PatientController;
@@ -74,4 +75,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/patient-logs', [PatientLogController::class, 'index']);
         Route::get('/patient-logs/{patientLog}', [PatientLogController::class, 'show']);
     });
+
+    //Rutas RFID y LoRa
+    Route::post('/rfid', [IoTDataInputController::class, 'rfid']);
+    Route::post('/lora', [IoTDataInputController::class, 'lora']);
 });

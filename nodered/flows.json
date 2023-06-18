@@ -1,0 +1,390 @@
+[
+    {
+        "id": "3dcfe25a50da3f0c",
+        "type": "tab",
+        "label": "Flow RFID",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "86cdd57464a1d3e8",
+        "type": "tab",
+        "label": "Flow LoRa",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "41585921a2253945",
+        "type": "tab",
+        "label": "Flow Telegram",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "96c47f672dce5a75",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c5657c08fe284d8b",
+        "type": "mqtt-broker",
+        "z": "86cdd57464a1d3e8",
+        "name": "",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2052449e0bf65c83",
+        "type": "telegram bot",
+        "botname": "IntermediarioTelegramBot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "745cdc0ed60a55b5",
+        "type": "http request",
+        "z": "3dcfe25a50da3f0c",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8000/api/rfid",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Accept",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 490,
+        "y": 120,
+        "wires": [
+            [
+                "44ba8a8432a3ebcd"
+            ]
+        ]
+    },
+    {
+        "id": "44ba8a8432a3ebcd",
+        "type": "debug",
+        "z": "3dcfe25a50da3f0c",
+        "name": "mdsg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "5b58d49b1d26b28d",
+        "type": "mqtt in",
+        "z": "3dcfe25a50da3f0c",
+        "name": "rfid",
+        "topic": "rfid",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "96c47f672dce5a75",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "c27e8208b5f3a30b"
+            ]
+        ]
+    },
+    {
+        "id": "c27e8208b5f3a30b",
+        "type": "function",
+        "z": "3dcfe25a50da3f0c",
+        "name": "body",
+        "func": "msg.payload = { \"id_rfid\": msg.payload.toString() };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "745cdc0ed60a55b5"
+            ]
+        ]
+    },
+    {
+        "id": "f8ae7e8891ef7c52",
+        "type": "mqtt in",
+        "z": "86cdd57464a1d3e8",
+        "name": "LoRa",
+        "topic": "lora",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c5657c08fe284d8b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "89ef16dc57ab9d20"
+            ]
+        ]
+    },
+    {
+        "id": "74971487d9fbbff3",
+        "type": "http request",
+        "z": "86cdd57464a1d3e8",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8000/api/lora",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Accept",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            },
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 550,
+        "y": 80,
+        "wires": [
+            [
+                "2bb20a11e0557930"
+            ]
+        ]
+    },
+    {
+        "id": "2bb20a11e0557930",
+        "type": "debug",
+        "z": "86cdd57464a1d3e8",
+        "name": "mdsg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "89ef16dc57ab9d20",
+        "type": "function",
+        "z": "86cdd57464a1d3e8",
+        "name": "body",
+        "func": "msg.payload = { \"lora\": msg.payload.toString() };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 80,
+        "wires": [
+            [
+                "74971487d9fbbff3"
+            ]
+        ]
+    },
+    {
+        "id": "803efefa6ead42bf",
+        "type": "debug",
+        "z": "41585921a2253945",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1a4403b94a6f55b9",
+        "type": "inject",
+        "z": "41585921a2253945",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 440,
+        "wires": [
+            [
+                "25e0c0daf45156af"
+            ]
+        ]
+    },
+    {
+        "id": "25e0c0daf45156af",
+        "type": "function",
+        "z": "41585921a2253945",
+        "name": "function 3",
+        "func": "msg.payload={\n    \"chatId\": 5921326108,\n    \"type\":\"message\",\n    \"content\":\"El paciente Yeray Bueno Villanueva ha salido del centro FSC por la puerta principal\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2658e0f329f497f0",
+        "type": "telegram receiver",
+        "z": "41585921a2253945",
+        "name": "",
+        "bot": "2052449e0bf65c83",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 170,
+        "y": 240,
+        "wires": [
+            [
+                "803efefa6ead42bf"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "52ef8656e3cbb20b",
+        "type": "telegram sender",
+        "z": "41585921a2253945",
+        "name": "",
+        "bot": "2052449e0bf65c83",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 550,
+        "y": 440,
+        "wires": [
+            [
+                "803efefa6ead42bf"
+            ]
+        ]
+    }
+]
