@@ -54,6 +54,14 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function getProfile()
+    {
+        return response()->json([
+            'message' => 'Perfil de usuario obtenido exitosamente.',
+            'user' => User::findOrFail(auth()->id())
+        ], 201);
+    }
+
     public function updateProfile(UserProfileRequest $request)
     {
         $user = User::findOrFail(auth()->id());

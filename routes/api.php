@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/contact-patient/{contact}/{patient}', [ContactPatientController::class, 'detach']);
 
     //Para actualizar el perfil del usuario
+    Route::get('/user-profile', [UserController::class, 'getProfile']);
     Route::put('/user-profile', [UserController::class, 'updateProfile']);
 
     //Rutas a las que solo tienen acceso los admins
