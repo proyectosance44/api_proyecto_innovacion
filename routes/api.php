@@ -75,8 +75,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/patient-logs', [PatientLogController::class, 'index']);
         Route::get('/patient-logs/{patientLog}', [PatientLogController::class, 'show']);
     });
-
-    //Rutas RFID y LoRa
-    Route::post('/rfid', [IoTDataInputController::class, 'rfid']);
-    Route::post('/lora', [IoTDataInputController::class, 'lora']);
 });
+
+//Rutas RFID y LoRa
+Route::post('/rfid', [IoTDataInputController::class, 'rfid']);
+Route::post('/lora', [IoTDataInputController::class, 'lora']);
