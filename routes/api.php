@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
 
     Route::post('/patients/{patient}/photo', [PatientController::class, 'storePhoto']); // Misma ruta para almacenar y actualizar
-    Route::get('/patients/{patient}/photo', [PatientController::class, 'showPhoto'])->name('photo.show');
+    Route::get('/patients/{patient}/photo', [PatientController::class, 'showPhoto']);
     Route::delete('/patients/{patient}/photo', [PatientController::class, 'destroyPhoto']);
 
     //Incidencias (solo se pueden consultar porque se crean cuando un paciente se escapa)
