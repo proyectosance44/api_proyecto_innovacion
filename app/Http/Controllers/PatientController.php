@@ -11,8 +11,6 @@ use App\Services\DataProcessingService;
 use App\Services\PatientLogService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use PHPUnit\Util\ThrowableToStringMapper;
-use Illuminate\Support\Facades\URL;
 
 class PatientController extends Controller
 {
@@ -80,7 +78,7 @@ class PatientController extends Controller
         $photo = $request->file('photo');
         $this->deletePhoto($patient);
         $photo->storeAs('patientPhotos', $patient->dni . '.' . $photo->getClientOriginalExtension());
-        $patient->ruta_foto = $patient->dni . '.' . $photo->getClientOriginalExtension();
+        $patient->nombre_foto = $patient->dni . '.' . $photo->getClientOriginalExtension();
         $patient->save();
         return response()->json([
             'message' => 'Foto almacenada exitosamente.'
@@ -89,12 +87,10 @@ class PatientController extends Controller
 
     public function showPhoto(Patient $patient)
     {
-        //$photoUrl = URL::temporarySignedRoute('photo.show', now()->addMinutes(5), ['patient' => 1/*'patientPhotos' . '/' . $patient->ruta_foto*/]);
-        $photoUrl = url('patientPhotos' . '/' . $patient->ruta_foto);
-        return response()->json([
-            'message' => 'Foto obtenida exitosamente.',
-            'photo_url' => $photoUrl
-        ], 200);
+        $allPath = 'app/patientPhotos/default.jpg';
+        if ($patient->nombre_foto !== null && Storage::exists($path = 'patientPhotos/' . $patient->nombre_foto))
+            $allPath = 'app/' . $path;
+        return response()->file(storage_path($allPath));
     }
 
     public function destroyPhoto(Patient $patient)
@@ -107,9 +103,9 @@ class PatientController extends Controller
 
     private function deletePhoto(Patient $patient)
     {
-        if ($patient->ruta_foto !== null) {
-            Storage::delete('patientPhotos' . '/' . $patient->ruta_foto);
-            $patient->ruta_foto = null;
+        if ($patient->nombre_foto !== null) {
+            Storage::delete('patientPhotos' . '/' . $patient->nombre_foto);
+            $patient->nombre_foto = null;
             $patient->save();
         }
     }

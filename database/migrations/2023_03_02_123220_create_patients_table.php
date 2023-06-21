@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('id_rfid')->unique();
             $table->string('nombre');
             $table->string('apellidos');
-            $table->string('ruta_foto')->unique()->nullable();
+            $table->string('nombre_foto')->unique()->nullable();
         });
     }
 

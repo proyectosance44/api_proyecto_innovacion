@@ -23,7 +23,7 @@ class Patient extends Model
     ];
 
     protected $hidden = [
-        'ruta_foto'
+        'nombre_foto'
         //'deleted_at'
     ];
 

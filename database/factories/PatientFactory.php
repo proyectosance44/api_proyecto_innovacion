@@ -32,7 +32,7 @@ class PatientFactory extends Factory
             'id_rfid' => bin2hex(Str::random(8) . strval($this->faker->unique()->randomNumber())),
             'nombre' => $this->faker->name(),
             'apellidos' => $this->faker->lastName() . " " . $this->faker->lastName(),
-            'ruta_foto' => null,
+            'nombre_foto' => null,
         ];
     }
 
