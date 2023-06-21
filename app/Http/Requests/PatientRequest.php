@@ -27,8 +27,7 @@ class PatientRequest extends FormRequest
             'id_lora' => [$required, 'string', 'max:255', 'regex:/^([\da-f]+)$/i', $unique],
             'id_rfid' => [$required, 'string', 'max:255', 'regex:/^([\da-f]+)$/i', $unique],
             'nombre' => [$required, 'string', 'max:255', new NotBlank()],
-            'apellidos' => [$required, 'string', 'max:255', new NotBlank()],
-            'foto' => ['image', 'mimes:jpg,png,jpeg', 'max:16384' /*16 megabytes*/]
+            'apellidos' => [$required, 'string', 'max:255', new NotBlank()]
         ];
     }
 
