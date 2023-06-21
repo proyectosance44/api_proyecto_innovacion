@@ -16,7 +16,7 @@ class LoRaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_lora' => ['required', 'string', 'max:255', 'regex:/^([\da-f]+)$/i', 'exists:patients,id_lora'],
+            'id_lora' => ['required', 'string', 'max:255', 'exists:patients,id_lora'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric']
         ];

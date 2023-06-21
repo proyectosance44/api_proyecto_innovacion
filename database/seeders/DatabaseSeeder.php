@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         // Paciente con RFID y LoRa a probar
         Patient::factory(1, [
             'id_rfid' => '52311c1f',
+            "id_lora" => 'eui-a84041000181b2f1',
             'nombre' => 'Alfonso',
             'apellidos' => 'Aguayo Román'
         ])->create();

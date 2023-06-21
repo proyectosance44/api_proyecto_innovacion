@@ -24,7 +24,7 @@ class PatientRequest extends FormRequest
 
         return [
             'dni' => [$required, 'string', 'size:9', new Dni(), $unique],
-            'id_lora' => [$required, 'string', 'max:255', 'regex:/^([\da-f]+)$/i', $unique],
+            'id_lora' => [$required, 'string', 'max:255', $unique],
             'id_rfid' => [$required, 'string', 'max:255', 'regex:/^([\da-f]+)$/i', $unique],
             'nombre' => [$required, 'string', 'max:255', new NotBlank()],
             'apellidos' => [$required, 'string', 'max:255', new NotBlank()]
